@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLUX — Motion Design Studio</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Bebas+Neue&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --cream: #f5f2eb;
+            --charcoal: #1a1a1a;
+            --clay: #c4b5a0;
+            --sage: #8b9a7d;
+            --terracotta: #c65d3b;
+            --ink: #2c3e50;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--cream);
+            color: var(--charcoal);
+            overflow-x: hidden;
+        }
+        
+        /* Kinetic Typography */
+        .kinetic {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(4rem, 20vw, 15rem);
+            line-height: 0.85;
+            letter-spacing: -0.02em;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .kinetic-outline {
+            color: transparent;
+            -webkit-text-stroke: 1px var(--charcoal);
+        }
+        
+        /* Liquid Button */
+        .liquid-btn {
+            position: relative;
+            padding: 1.25rem 2.5rem;
+            background: var(--charcoal);
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            border-radius: 100px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .liquid-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: var(--terracotta);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .liquid-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .liquid-btn span {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Morphing Blob */
+        .blob {
+            position: absolute;
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            animation: morph 8s ease-in-out infinite;
+            filter: blur(40px);
+            opacity: 0.6;
+        }
+        
+        @keyframes morph {
+            0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+            25% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+            50% { border-radius: 50% 60% 30% 60% / 30% 40% 70% 50%; }
+            75% { border-radius: 40% 60% 60% 40% / 60% 40% 30% 70%; }
+        }
+        
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.5rem 2rem;
+            mix-blend-mode: difference;
+        }
+        
+        .nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.75rem;
+            letter-spacing: 0.05em;
+            color: #fff;
+        }
+        
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .nav-time {
+            font-size: 0.875rem;
+            color: rgba(255,255,255,0.6);
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .menu-btn {
+            width: 48px;
+            height: 48px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .menu-btn:hover {
+            background: #fff;
+            border-color: #fff;
+        }
+        
+        .menu-btn span {
+            width: 18px;
+            height: 1px;
+            background: #fff;
+            transition: all 0.3s;
+        }
+        
+        .menu-btn:hover span {
+            background: #000;
+        }
+        
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 6rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-blob {
+            width: 600px;
+            height: 600px;
+            background: var(--clay);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .hero-label {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--charcoal);
+            opacity: 0.6;
+            margin-bottom: 2rem;
+        }
+        
+        .hero-title {
+            margin-bottom: 3rem;
+        }
+        
+        .hero-title .line {
+            display: block;
+        }
+        
+        .hero-title .line:nth-child(2) {
+            padding-left: 10vw;
+        }
+        
+        .hero-title .line:nth-child(3) {
+            color: var(--terracotta);
+        }
+        
+        .hero-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .hero-desc {
+            max-width: 400px;
+            font-size: 1rem;
+            line-height: 1.7;
+            color: rgba(0,0,0,0.6);
+        }
+        
+        /* Marquee */
+        .marquee {
+            padding: 2rem 0;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        
+        .marquee-content {
+            display: inline-block;
+            animation: scroll 20s linear infinite;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            letter-spacing: 0.1em;
+            color: rgba(0,0,0,0.2);
+        }
+        
+        .marquee-content span {
+            margin: 0 3rem;
+        }
+        
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        /* Work Section */
+        .work {
+            padding: 8rem 2rem;
+        }
+        
+        .work-list {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .work-item {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr auto;
+            align-items: center;
+            gap: 2rem;
+            padding: 2rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.4s;
+            position: relative;
+        }
+        
+        .work-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            height: 0;
+            background: var(--charcoal);
+            transition: height 0.4s;
+            z-index: -1;
+        }
+        
+        .work-item:hover::before {
+            height: 100%;
+        }
+        
+        .work-item:hover {
+            color: var(--cream);
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+        
+        .work-num {
+            font-size: 0.875rem;
+            color: rgba(0,0,0,0.4);
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .work-item:hover .work-num {
+            color: rgba(255,255,255,0.4);
+        }
+        
+        .work-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2rem, 5vw, 4rem);
+            letter-spacing: 0.02em;
+        }
+        
+        .work-cat {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(0,0,0,0.5);
+        }
+        
+        .work-item:hover .work-cat {
+            color: rgba(255,255,255,0.5);
+        }
+        
+        .work-arrow {
+            width: 48px;
+            height: 48px;
+            border: 1px solid currentColor;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.4s;
+        }
+        
+        .work-item:hover .work-arrow {
+            transform: rotate(45deg);
+            background: var(--terracotta);
+            border-color: var(--terracotta);
+        }
+        
+        /* About */
+        .about {
+            padding: 8rem 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6rem;
+            align-items: center;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .about-visual {
+            position: relative;
+            aspect-ratio: 1;
+        }
+        
+        .about-blob {
+            width: 100%;
+            height: 100%;
+            background: var(--sage);
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        
+        .about-img {
+            position: relative;
+            width: 80%;
+            height: 80%;
+            top: 10%;
+            left: 10%;
+            object-fit: cover;
+            border-radius: 2rem;
+            filter: grayscale(100%) contrast(1.1);
+            mix-blend-mode: multiply;
+        }
+        
+        .about-content h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(3rem, 6vw, 5rem);
+            margin-bottom: 2rem;
+            line-height: 0.9;
+        }
+        
+        .about-content p {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            color: rgba(0,0,0,0.6);
+            margin-bottom: 2rem;
+        }
+        
+        .stats-row {
+            display: flex;
+            gap: 4rem;
+            margin-top: 3rem;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .stat h4 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat p {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(0,0,0,0.5);
+        }
+        
+        /* Footer */
+        footer {
+            padding: 6rem 2rem;
+            background: var(--charcoal);
+            color: var(--cream);
+        }
+        
+        .footer-inner {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .footer-cta {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(3rem, 10vw, 8rem);
+            line-height: 0.9;
+            margin-bottom: 4rem;
+        }
+        
+        .footer-cta a {
+            color: var(--cream);
+            text-decoration: none;
+            border-bottom: 1px solid var(--terracotta);
+            transition: color 0.3s;
+        }
+        
+        .footer-cta a:hover {
+            color: var(--terracotta);
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4rem;
+            padding-top: 4rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .footer-col h5 {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-col ul {
+            list-style: none;
+        }
+        
+        .footer-col li {
+            margin-bottom: 0.75rem;
+        }
+        
+        .footer-col a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-col a:hover {
+            color: var(--cream);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .about {
+                grid-template-columns: 1fr;
+            }
+            
+            .about-visual {
+                max-width: 500px;
+                margin: 0 auto;
+            }
+            
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title .line:nth-child(2) {
+                padding-left: 0;
+            }
+            
+            .hero-bottom {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 2rem;
+            }
+            
+            .work-item {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .work-arrow {
+                display: none;
+            }
+            
+            .stats-row {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-inner">
+            <div class="logo">FLUX</div>
+            <div class="nav-right">
+                <span class="nav-time" id="clock">00:00:00</span>
+                <div class="menu-btn">
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <section class="hero">
+        <div class="blob hero-blob"></div>
+        
+        <div class="hero-content">
+            <p class="hero-label">Motion Design Studio — Est. 2024</p>
+            
+            <h1 class="hero-title kinetic">
+                <span class="line">Everything</span>
+                <span class="line kinetic-outline">Moves</span>
+                <span class="line">Forward</span>
+            </h1>
+            
+            <div class="hero-bottom">
+                <p class="hero-desc">We craft kinetic identities and motion systems for brands that refuse to stand still. Based in Copenhagen, working globally.</p>
+                <a href="#work" class="liquid-btn">
+                    <span>Explore Work</span>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <div class="marquee">
+        <div class="marquee-content">
+            <span>Motion Design</span>
+            <span>Brand Identity</span>
+            <span>Kinetic Type</span>
+            <span>3D Direction</span>
+            <span>Film Title</span>
+            <span>Digital Experience</span>
+            <span>Motion Design</span>
+            <span>Brand Identity</span>
+            <span>Kinetic Type</span>
+            <span>3D Direction</span>
+            <span>Film Title</span>
+            <span>Digital Experience</span>
+        </div>
+    </div>
+    
+    <section class="work" id="work">
+        <div class="work-list">
+            <div class="work-item">
+                <span class="work-num">01</span>
+                <h3 class="work-title">Nordic Light Festival</h3>
+                <span class="work-cat">Identity / Motion</span>
+                <div class="work-arrow">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M5 15L15 5M15 5H5M15 5V15" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="work-item">
+                <span class="work-num">02</span>
+                <h3 class="work-title">Aether Magazine</h3>
+                <span class="work-cat">Art Direction / Film</span>
+                <div class="work-arrow">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M5 15L15 5M15 5H5M15 5V15" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="work-item">
+                <span class="work-num">03</span>
+                <h3 class="work-title">Terra Forma</h3>
+                <span class="work-cat">3D / Experience</span>
+                <div class="work-arrow">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M5 15L15 5M15 5H5M15 5V15" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="work-item">
+                <span class="work-num">04</span>
+                <h3 class="work-title">Kinetic Archive</h3>
+                <span class="work-cat">Type Design / Tool</span>
+                <div class="work-arrow">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M5 15L15 5M15 5H5M15 5V15" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="work-item">
+                <span class="work-num">05</span>
+                <h3 class="work-title">Void Spaces</h3>
+                <span class="work-cat">Installation / Film</span>
+                <div class="work-arrow">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M5 15L15 5M15 5H5M15 5V15" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="about">
+        <div class="about-visual">
+            <div class="blob about-blob"></div>
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80" alt="Studio" class="about-img">
+        </div>
+        
+        <div class="about-content">
+            <h2>Motion is our native language</h2>
+            <p>We believe in the power of movement to communicate. Every project begins with understanding the rhythm of a brand—the way it breathes, shifts, and evolves. From there, we build systems that move with purpose.</p>
+            <p>Our team brings together designers, animators, and developers who share an obsession with the space between static and dynamic.</p>
+            
+            <div class="stats-row">
+                <div class="stat">
+                    <h4>127</h4>
+                    <p>Projects Delivered</p>
+                </div>
+                <div class="stat">
+                    <h4>14</h4>
+                    <p>Countries Reached</p>
+                </div>
+                <div class="stat">
+                    <h4>6</h4>
+                    <p>Team Members</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="footer-inner">
+            <p class="footer-cta">
+                Ready to move?<br>
+                <a href="mailto:hello@flux.studio">Let's talk →</a>
+            </p>
+            
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h5>Navigation</h5>
+                    <ul>
+                        <li><a href="#">Work</a></li>
+                        <li><a href="#">Studio</a></li>
+                        <li><a href="#">Services</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h5>Social</h5>
+                    <ul>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">Vimeo</a></li>
+                        <li><a href="#">Behance</a></li>
+                        <li><a href="#">Dribbble</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h5>Contact</h5>
+                    <ul>
+                        <li><a href="mailto:hello@flux.studio">hello@flux.studio</a></li>
+                        <li><a href="tel:+4520123456">+45 20 12 34 56</a></li>
+                        <li><a href="#">Copenhagen, DK</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h5>Info</h5>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Use</a></li>
+                        <li><a href="#">© 2026 Flux Studio</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Live Clock
+        function updateClock() {
+            const now = new Date();
+            const time = now.toLocaleTimeString('en-US', { 
+                hour12: false, 
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('clock').textContent = time;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+        
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
